@@ -1,6 +1,7 @@
 -**DAMY - Cotizador de Traslados**
 
-Aplicación web desarrollada en Django que permite comparar precios y tiempos de espera entre distintas aplicaciones de transporte (Uber, Cabify, Didi, etc.). El usuario puede ingresar un origen y destino, obtener cotizaciones en tiempo real y guardar sus solicitudes para revisarlas, editarlas o eliminarlas posteriormente.
+Aplicación web desarrollada para resolver el siguiente problema: Cuando una persona requiere un servicio de transporte por una app (Uber,Didi, Cabify) usualmente ingresa a su aplicacion favorita o mas usada, realiza la solicitud y, si el tiempo de espera y/o el precio no le acomodan, abre otra app y realiza lo mismmo. En ocasiones las personas abren las tres apps mas populars y solicitan su viaje en las tres a ver cual llega primero. Esta App busca optimizar ese proceso al comparar en un solo lugar los precios y tiempos de espera entre distintas aplicaciones de transporte, con el ingreso por parte del usuario del origen y destino, y elegir de acuerdo a lo que mejor le convenga, en cual aplicacion hacer su viaje.
+Los datos de las rutas y de las tarifas y tiempos de las aplicaciones fueron simuladas en el admin.py de Django.
 
 -**Tecnologías utilizadas**
 * Backend: Django 4.x, Python 3.x
