@@ -24,9 +24,6 @@ Aplicación web desarrollada en Django que permite comparar precios y tiempos de
 * Editar: recalcula precio/tiempo si cambias origen, destino o app.
 * Eliminar: borra la solicitud del listado.
 
-📸 Capturas de pantalla
-Formulario de cotización
-
 -**Autor:**
 Proyecto desarrollado por Karen Herrera como parte de su formación en Full Stack Python/Django.
 

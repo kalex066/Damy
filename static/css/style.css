@@ -1,0 +1,152 @@
+:root {
+    --color-principal: #8e44ad;      /* Lila profundo */
+    --color-acento: #2ecc71;         /* Verde menta */
+    --color-secundario: #f8f9fa;     /* Gris claro / fondo */
+    --color-texto-oscuro: #343a40;   /* Texto principal */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--color-texto-oscuro);
+    background-color: var(--color-secundario);
+}
+
+/* Fondo navbar y headers */
+.bg-azul-marino {
+    background-color: var(--color-principal) !important;
+}
+
+/* Texto destacado */
+.text-principal {
+    color: var(--color-principal);
+}
+
+.text-acento {
+    color: var(--color-acento) !important;
+}
+
+/* Botón principal */
+.btn-principal {
+    background-color: var(--color-principal);
+    border-color: var(--color-principal);
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-principal:hover {
+    background-color: #732d91; /* Lila más oscuro */
+    border-color: #732d91;
+    box-shadow: 0 0 10px rgba(142, 68, 173, 0.4);
+    transform: scale(1.02);
+}
+
+/* Botón secundario */
+.btn-outline-principal {
+    color: var(--color-principal);
+    border-color: var(--color-principal);
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-outline-principal:hover {
+    background-color: var(--color-principal);
+    color: white;
+    box-shadow: 0 0 10px rgba(142, 68, 173, 0.3);
+}
+
+/* Footer */
+.footer-azul {
+    background-color: var(--color-secundario);
+    color: var(--color-principal);
+    padding: 1.5rem 0;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 5rem;
+}
+
+.footer-azul a {
+    color: var(--color-principal);
+    text-decoration: none;
+}
+
+.footer-azul a:hover {
+    text-decoration: underline;
+}
+
+/* Navbar */
+.navbar-brand, .nav-link {
+    font-weight: 500;
+}
+
+/* Layout */
+main {
+    min-height: 70vh;
+}
+
+/* Responsive ajustes */
+@media (max-width: 767.98px) {
+    .navbar-nav .nav-item {
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-azul .col-md-6 {
+        text-align: center !important;
+    }
+
+    .footer-azul p, .footer-azul a {
+        font-size: 0.85rem;
+        display: block;
+        margin: 0.2rem 0;
+    }
+
+    .footer-azul .me-3 {
+        margin-right: 0 !important;
+    }
+}
+
+/* Estilos del icono SVG */
+.icon-prohibida {
+    width: 120px;
+    height: 120px;
+    animation: pulse-icon 2s infinite alternate;
+}
+
+@keyframes pulse-icon {
+    0% { transform: scale(1); opacity: 1; }
+     100% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+ /* Animación de advertencia para botón de eliminación */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+.btn-danger.btn-lg:hover {
+  animation: shake 0.3s ease-in-out;
+  background-color: #c82333; /* rojo más intenso */
+  box-shadow: 0 0 10px rgba(200, 35, 51, 0.5);
+  transform: scale(1.02);
+}
+.btn-principal:hover {
+  background-color: var(--color-acento); /* verde menta */
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.4);
+  transform: scale(1.03);
+  transition: all 0.3s ease-in-out;
+}
+.text-error {
+  color: var(--color-acento);
+  font-weight: 600;
+}
+@keyframes pulse-alert {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.icon-prohibida {
+  width: 80px;
+  height: 80px;
+  animation: pulse-alert 1.5s infinite;
+}

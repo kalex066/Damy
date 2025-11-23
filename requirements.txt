@@ -1,0 +1,19 @@
+# Framework principal
+Django==4.2.7
+
+# Manejo de imágenes (para logos de apps)
+Pillow==10.0.1
+
+# Soporte para variables de entorno
+python-decouple==3.8
+
+# Conexión con bases de datos (elige según tu motor)
+mysqlclient==2.2.4       # MySQL/MariaDB
+
+# Para trabajar con formularios y validaciones
+django-crispy-forms==2.0
+crispy-bootstrap5==0.7
+
+# Seguridad y autenticación
+django-allauth==0.61.1
+

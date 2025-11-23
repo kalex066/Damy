@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Confirmar Eliminación{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-lg-7 col-md-8">
+
+        <div class="card shadow-lg border-danger rounded-lg">
+            <div class="card-header bg-danger text-white text-center">
+                <h3 class="fw-bold mb-0">🚨 ¡Advertencia! 🚨</h3>
+            </div>
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <p class="lead mt-4 text-error animate__animated animate__fadeInUp"">
+                        Estás a punto de eliminar la siguiente cotización.
+                    </p>
+                </div>
+                
+                <div class="card bg-light border-0 p-3 mb-4">
+                    <h5 class="text-principal">Detalles del Viaje:</h5>
+                    <ul class="list-unstyled mb-0 small">
+                        <li><strong>ID de Solicitud:</strong> #{{ object.pk }}</li>
+                        <li><strong>Origen:</strong> {{ object.origen_nombre }}</li>
+                        <li><strong>Destino:</strong> {{ object.destino_nombre }}</li>
+                        <li><strong>App Seleccionada:</strong> {{ object.app_seleccionada.nombre }}</li>
+                        <li>
+                            <img src="{{ object.app_seleccionada.logo.url }}" alt="{{ object.app_seleccionada.nombre }}" style="height: 40px; width: auto; object-fit: contain;">
+                        </li>
+                        <li><strong>Precio:</strong> ${{ object.precio|floatformat:0 }}</li>
+                    </ul>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <p class="mb-4">
+                        ¿Estás absolutamente seguro de que deseas eliminar esta solicitud?
+                    </p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'mis_cotizaciones' %}" class="btn btn-principal btn-lg">
+                            Cancelar y Volver
+                        </a>
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            Eliminar
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
