@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'trippicker_project.urls'
+ROOT_URLCONF = 'damy.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'trippicker_project.wsgi.application'
+WSGI_APPLICATION = 'damy.wsgi.application'
 
 
 # Database
