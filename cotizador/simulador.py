@@ -1,66 +1,55 @@
-import random
-from decimal import Decimal
-from .models import Ruta, CotizacionTraslado
 from django.db.models import Q
+from .models import Ruta, TransporteApp
 
 class AppCotizadora:
     """
-    Clase para simular la cotización de un viaje con una aplicación
-    de transporte, basada en los parámetros de la aplicación.
+    Clase que simula la cotización de traslados en distintas aplicaciones de transporte.
     """
-    def __init__(self, app_transporte):
-        if not hasattr(app_transporte, 'tarifa_base') or not hasattr(app_transporte, 'costo_por_km'):
-            raise TypeError("El objeto pasado debe ser una instancia válida de TransporteApp.")
 
-        self.tarifa_base = app_transporte.tarifa_base
-        self.costo_por_km = app_transporte.costo_por_km
-        self.max_multiplicador = app_transporte.max_multiplicador
+    def __init__(self, app: TransporteApp, ruta: Ruta):
+        self.app = app
+        self.ruta = ruta
 
-    def cotizar(self, distancia_km):
-        if distancia_km is None or distancia_km <= 0:
-            raise ValueError("La distancia debe ser positiva.")
+    def calcular_cotizacion(self):
+        """
+        Calcula el precio estimado del traslado según la distancia y el factor dinámico de la app.
+        """
+        precio_base = self.app.precio_base
+        factor_dinamico = self.app.factor_dinamico
+        distancia = self.ruta.distancia_km
+        tiempo = self.ruta.tiempo_min
 
-        factor_float = random.uniform(1.0, float(self.max_multiplicador))
-        factor_dinamico = Decimal(str(factor_float)).quantize(Decimal('0.01'))
-
-        costo_variable = (distancia_km * self.costo_por_km) * factor_dinamico
-        precio_total = self.tarifa_base + costo_variable
-        precio_final = precio_total.quantize(Decimal('0.01'))
-
-        tiempo_espera = random.randint(3, 12)
+        # Fórmula de cotización del precio
+        precio_estimado = precio_base + (distancia * self.app.costo_por_km) + (tiempo * self.app.costo_por_min)
+        precio_estimado *= factor_dinamico
 
         return {
-            'precio': precio_final,
-            'factor_dinamico': factor_dinamico,
-            'tiempo_espera': tiempo_espera
+            "app_nombre": self.app.nombre,
+            "app_logo": self.app.logo.url if self.app.logo else None,
+            "precio": round(precio_estimado, 0),
+            "tiempo_espera": self.app.tiempo_espera,
+            "factor_dinamico": factor_dinamico,
+            "origen_nombre": self.ruta.origen,
+            "destino_nombre": self.ruta.destino,
         }
 
-    @staticmethod
-    def crear_cotizacion(usuario, ruta, app_transporte):
-        cotizador = AppCotizadora(app_transporte)
-        datos = cotizador.cotizar(ruta.distancia_km)
-        return CotizacionTraslado.objects.create(
-            usuario=usuario,
-            origen_nombre=ruta.origen,
-            destino_nombre=ruta.destino,
-            app_seleccionada=app_transporte,
-            precio=datos['precio'],
-            tiempo_espera=datos['tiempo_espera'],
-            factor_dinamico=datos['factor_dinamico']
-        )
 
 def obtener_datos_ruta(origen: str, destino: str):
+    """
+    Busca una ruta en la base de datos que coincida con el origen y destino.
+    Se admite tanto la dirección directa como inversa.
+    """
     condicion_directa = Q(origen__iexact=origen, destino__iexact=destino)
     condicion_inversa = Q(origen__iexact=destino, destino__iexact=origen)
-    try:
-        return Ruta.objects.filter(condicion_directa | condicion_inversa).first()
-    except Exception as e:
-        print(f"Error al buscar la ruta: {e}")
-        return None
+    return Ruta.objects.filter(condicion_directa | condicion_inversa).first()
+
 
 def obtener_ubicaciones_disponibles():
-    origenes = Ruta.objects.values_list('origen', flat=True)
-    destinos = Ruta.objects.values_list('destino', flat=True)
-    ubicaciones = origenes.union(destinos)
+    """
+    Devuelve todas las ubicaciones disponibles (orígenes y destinos) registradas en la base de datos.
+    """
+    origenes = list(Ruta.objects.values_list('origen', flat=True))
+    destinos = list(Ruta.objects.values_list('destino', flat=True))
+    ubicaciones = set(origenes + destinos)
     return sorted(ubicaciones)
 

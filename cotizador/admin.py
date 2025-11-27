@@ -3,7 +3,7 @@ from .models import TransporteApp, CotizacionTraslado, Ruta
 
 @admin.register(TransporteApp)
 class TransporteAppAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'tarifa_base', 'costo_por_km', 'max_multiplicador')
+    list_display = ('nombre', 'precio_base', 'costo_por_km', 'costo_por_min', 'factor_dinamico', 'tiempo_espera',)
     list_display_links = ('nombre',)
     ordering = ('nombre',)
 
@@ -17,12 +17,23 @@ class RutaAdmin(admin.ModelAdmin):
 @admin.register(CotizacionTraslado)
 class CotizacionTrasladoAdmin(admin.ModelAdmin):
     list_display = (
-        'usuario', 'origen_nombre', 'destino_nombre',
-        'app_seleccionada', 'precio', 'factor_dinamico',
-        'tiempo_espera', 'fecha_creacion'
+        'id',
+        'usuario',
+        'get_origen',
+        'get_destino',
+        'app_seleccionada',
+        'precio',
+        'tiempo_espera',
+        'factor_dinamico',
+        'fecha_creacion',
     )
-    list_filter = ('fecha_creacion', 'app_seleccionada')
-    search_fields = ('usuario__username', 'origen_nombre', 'destino_nombre') 
-    readonly_fields = ('precio', 'fecha_creacion')
-    date_hierarchy = 'fecha_creacion'
+    list_display_links = ('id', 'usuario')
     ordering = ('-fecha_creacion',)
+
+    def get_origen(self, obj):
+        return obj.ruta.origen if obj.ruta else None
+    get_origen.short_description = 'Origen'
+
+    def get_destino(self, obj):
+        return obj.ruta.destino if obj.ruta else None
+    get_destino.short_description = 'Destino'

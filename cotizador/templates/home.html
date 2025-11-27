@@ -1,98 +1,105 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Cotizador de Traslados{% endblock %}
-
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-lg-10 col-md-11">
-        <h2 class="display-5 text-center text-principal mb-4 fw-bold">
-            Optimiza tu viaje cotizando en un solo lugar
-        </h2>
-        <p class="lead text-center text-muted mb-5">
-            Selecciona tu origen y destino para comparar precios entre todas las aplicaciones de transporte disponibles.
-        </p>
-
-        {% if mensaje_error %}
-        <div class="alert alert-danger text-center">{{ mensaje_error }}</div>
-        {% endif %}
-
-        <div class="card shadow-lg border-0 rounded-3 p-4">
-            <div class="card-body">
-                <form method="post" action="{% url 'home' %}" class="row g-3">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <div class="col-12 text-center pt-4">
-                        <button type="submit" class="btn btn-principal btn-lg px-5 shadow-sm">
-                            COTIZAR
-                        </button>
-                    </div>
-                </form>
-            </div>
+<div class="container py-5">
+    <h2 class="display-5 text-center text-principal mb-4 fw-bold">
+        Optimiza tu viaje cotizando en un solo lugar
+    </h2>
+    <form method="post" action="{% url 'home' %}" autocomplete="off" class="row g-3 justify-content-center">
+        {% csrf_token %}
+        <div class="col-md-5">
+            <label for="{{ form.origen.id_for_label }}" class="form-label">
+                {{ form.origen.label }}
+            </label>
+            {{ form.origen }}
         </div>
+        <div class="col-md-5">
+            <label for="{{ form.destino.id_for_label }}" class="form-label">
+                {{ form.destino.label }}
+            </label>
+            {{ form.destino }}
+        </div>
+        <div class="col-12 text-center pt-4">
+            <button type="submit" class="btn btn-principal btn-lg px-5 shadow-sm">
+                COTIZAR
+            </button>
+        </div>
+    </form>
+</div>
 
-        {% if cotizaciones %}
-        <!-- Modal -->
-        <div class="modal fade" id="modalCotizaciones" tabindex="-1" aria-labelledby="modalCotizacionesLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-principal" id="modalCotizacionesLabel">
-                            Resultados para {{ origen_seleccionado }} → {{ destino_seleccionado }}
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row row-cols-1 row-cols-md-3 g-4">
-                            {% for cot in cotizaciones %}
-                            <div class="col">
-                                <div class="card h-100 shadow-sm">
-                                    <div class="card-body text-center">
-                                        <img src="{{ cot.app_logo }}" alt="{{ cot.app_nombre }}"
-                                             class="card-img-top img-fluid mb-3"
-                                             style="height: 50px; width: auto; object-fit: contain;">
-                                        <h4 class="card-title text-primary">{{ cot.app_nombre }}</h4>
-                                        <hr>
-                                        <p class="card-text">
-                                            Precio: <br>
-                                            <span class="fs-4 fw-bold text-success">${{ cot.precio|floatformat:0 }}</span>
-                                        </p>
-                                        <p class="card-text">
-                                            ⏱Tiempo de Espera:<br>
-                                            <span class="fs-5">{{ cot.tiempo_espera }} min.</span>
-                                        </p>
-                                    </div>
-                                    <div class="card-footer bg-light border-0">
-                                        <form method="post" action="{% url 'redireccion' app_id=cot.app_id %}" class="d-grid gap-2">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="origen" value="{{ cot.origen_nombre }}">
-                                            <input type="hidden" name="destino" value="{{ cot.destino_nombre }}">
-                                            <input type="hidden" name="precio" value="{{ cot.precio }}">
-                                            <input type="hidden" name="tiempo_espera" value="{{ cot.tiempo_espera }}">
-                                            <input type="hidden" name="factor_dinamico" value="{{ cot.factor_dinamico }}">
-                                            <button type="submit" class="btn btn-lg btn-success">Ir a la app</button>
-                                        </form>
-                                    </div>
+{% if cotizaciones %}
+<!-- Modal -->
+    <div class="modal fade" id="modalCotizaciones" tabindex="-1" aria-labelledby="modalCotizacionesLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-principal" id="modalCotizacionesLabel">
+                        Resultados para {{ origen_seleccionado }} → {{ destino_seleccionado }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        {% for cot in cotizaciones %}
+                        <div class="col">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <img src="{{ cot.app_logo }}" alt="{{ cot.app_nombre }} logo"
+                                         class="card-img-top img-fluid mb-3"
+                                         style="height: 50px; width: auto; object-fit: contain;">
+                                    <h4 class="card-title text-primary">{{ cot.app_nombre }}</h4>
+                                    <hr>
+                                    <p class="card-text">
+                                        Precio: <br>
+                                        <span class="fs-4 fw-bold text-success">
+                                            ${{ cot.precio|floatformat:0 }}
+                                        </span>
+                                    </p>
+                                    <p class="card-text">
+                                        Tiempo de Espera:<br>
+                                        <span class="fs-5">{{ cot.tiempo_espera }} min.</span>
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-light border-0">
+                                    <form method="post" action="{% url 'redireccion' app_id=cot.app_id %}" class="d-grid gap-2">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="origen" value="{{ cot.origen_nombre }}">
+                                        <input type="hidden" name="destino" value="{{ cot.destino_nombre }}">
+                                        <input type="hidden" name="precio" value="{{ cot.precio }}">
+                                        <input type="hidden" name="tiempo_espera" value="{{ cot.tiempo_espera }}">
+                                        <input type="hidden" name="factor_dinamico" value="{{ cot.factor_dinamico }}">
+                                        <button type="submit" class="btn btn-lg btn-success">Ir a la app</button>
+                                    </form>
                                 </div>
                             </div>
-                            {% endfor %}
                         </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Script para mostrar el modal automáticamente -->
+    {% if mostrar_modal %}
+    <!-- Script para mostrar el modal automáticamente -->
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 var modal = new bootstrap.Modal(document.getElementById('modalCotizaciones'));
                 modal.show();
             });
         </script>
-        {% endif %}
-    </div>
-</div>
+    {% endif %}
+{% endif %}
+
+<!-- Script para forzar recarga al volver atrás -->
+<script>
+    window.addEventListener("pageshow", function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+</script>
+
 {% endblock %}
-
-
 

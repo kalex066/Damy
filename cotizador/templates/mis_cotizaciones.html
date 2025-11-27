@@ -4,7 +4,7 @@
 {% block title %}Mis Cotizaciones de Traslado{% endblock %}
 
 {% block content %}
-<div class="container mt-4"> ihf
+<div class="container mt-4">
     <div class="row">
         <div class="col-12">
             <h2 class="text-principal mb-4">Mis Cotizaciones</h2>
@@ -21,7 +21,7 @@
                                 <th scope="col">Fecha y Hora</th>
                                 <th scope="col">Origen</th>
                                 <th scope="col">Destino</th>
-                                <th scope="col">App Seleccionada</th>
+                                <th scope="col">Aplicacion</th>
                                 <th scope="col" class="text-end">Precio</th>
                                 <th scope="col" class="text-end">Tiempo Espera (min)</th>
                                 <th scope="col" class="text-center">Acciones</th>
@@ -31,8 +31,8 @@
                             {% for cotizacion in cotizaciones %}
                                 <tr>
                                     <td>{{ cotizacion.fecha_creacion|date:"Y-m-d H:i" }}</td>
-                                    <td>{{ cotizacion.origen_nombre }}</td>
-                                    <td>{{ cotizacion.destino_nombre }}</td>
+                                    <td>{{ cotizacion.ruta.origen }}</td>
+                                    <td>{{ cotizacion.ruta.destino }}</td>
                                     <td>
                                         <img src="{{ cotizacion.app_seleccionada.logo.url }}" alt="{{ cotizacion.app_seleccionada.nombre }}" style="height: 40px; width: auto; object-fit: contain;">
                                         <br>

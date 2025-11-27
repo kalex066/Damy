@@ -17,13 +17,13 @@
                         Estás a punto de eliminar la siguiente cotización.
                     </p>
                 </div>
-                
+
                 <div class="card bg-light border-0 p-3 mb-4">
                     <h5 class="text-principal">Detalles del Viaje:</h5>
                     <ul class="list-unstyled mb-0 small">
                         <li><strong>ID de Solicitud:</strong> #{{ object.pk }}</li>
-                        <li><strong>Origen:</strong> {{ object.origen_nombre }}</li>
-                        <li><strong>Destino:</strong> {{ object.destino_nombre }}</li>
+                        <li><strong>Origen:</strong> {{ object.ruta.origen }}</li>
+                        <li><strong>Destino:</strong> {{ object.ruta.destino }}</li>
                         <li><strong>App Seleccionada:</strong> {{ object.app_seleccionada.nombre }}</li>
                         <li>
                             <img src="{{ object.app_seleccionada.logo.url }}" alt="{{ object.app_seleccionada.nombre }}" style="height: 40px; width: auto; object-fit: contain;">

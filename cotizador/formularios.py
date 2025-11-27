@@ -1,8 +1,6 @@
 from django import forms
-from django.forms import ModelForm
-from django.db import DatabaseError
 from .simulador import obtener_ubicaciones_disponibles
-from .models import CotizacionTraslado, TransporteApp
+from .models import CotizacionTraslado
 
 class CotizacionForm(forms.Form):
     origen = forms.ChoiceField(
@@ -18,11 +16,10 @@ class CotizacionForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        try:
-            ubicaciones = obtener_ubicaciones_disponibles()
-            CHOICES = [(u, u) for u in ubicaciones]
-        except DatabaseError:
-            CHOICES = [('', '--- No está lista la Base de Datos ---')]
+        ubicaciones = obtener_ubicaciones_disponibles()
+        CHOICES = [(u, u) for u in ubicaciones]
+        if not CHOICES:
+            CHOICES = [('', '--- No hay ubicaciones disponibles ---')]
 
         CHOICES.insert(0, ('', '--- Seleccione un lugar ---'))
         self.fields['origen'].choices = CHOICES
@@ -36,21 +33,28 @@ class CotizacionForm(forms.Form):
             raise forms.ValidationError("El origen y destino no pueden ser iguales.")
         return cleaned_data
 
-class EditarCotizacionForm(ModelForm):
-    """
-    Formulario para modificar los datos de una solicitud de cotización
-    """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'
-        self.fields['app_seleccionada'].queryset = TransporteApp.objects.all().order_by('nombre')
+class EditarCotizacionForm(forms.ModelForm):
+    origen = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label="Origen"
+    )
+    destino = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label="Destino"
+    )
 
     class Meta:
         model = CotizacionTraslado
-        fields = ['origen_nombre', 'destino_nombre', 'app_seleccionada']
-        labels = {
-            'origen_nombre': 'Origen',
-            'destino_nombre': 'Destino',
-            'app_seleccionada': 'Aplicación Seleccionada',
+        fields = ['origen', 'destino', 'app_seleccionada']
+        widgets = {
+            'app_seleccionada': forms.Select(attrs={'class': 'form-control'}),
         }
+    # precarga de datos de la cotizacion original
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.ruta:
+            self.fields['origen'].initial = self.instance.ruta.origen
+            self.fields['destino'].initial = self.instance.ruta.destino
+
